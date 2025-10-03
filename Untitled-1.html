@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ログイン（スタイル適用済み）</title>
+    
+    <style>
+        /* 全体のリセットと背景設定 */
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            display: flex; /* 中央揃えのためにflexboxを使用 */
+            justify-content: center; /* 水平方向の中央 */
+            align-items: center; /* 垂直方向の中央 */
+            height: 100vh; /* 画面全体の高さを取る */
+            margin: 0;
+            background-color: #f0f2f5; /* 優しい背景色 */
+        }
+
+        /* ログインコンテナのスタイル */
+        .login-container {
+            background: white;
+            padding: 40px;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1); /* 影をつけて立体感を出す */
+            width: 100%;
+            max-width: 400px; /* 最大幅を設定 */
+            box-sizing: border-box;
+        }
+
+        /* 見出しのスタイル */
+        h2 {
+            text-align: center;
+            color: #1c1e21;
+            margin-bottom: 30px;
+            font-size: 24px;
+        }
+
+        /* 入力欄のコンテナ */
+        div {
+            margin-bottom: 15px;
+        }
+
+        /* ラベルのスタイル */
+        label {
+            display: block; /* ブロック要素にして縦に並べる */
+            margin-bottom: 5px;
+            font-weight: 600;
+            color: #606770;
+            font-size: 14px;
+        }
+
+        /* テキストとパスワード入力欄のスタイル */
+        input[type="text"], 
+        input[type="password"] {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #dddfe2;
+            border-radius: 6px;
+            box-sizing: border-box; /* paddingを含めて幅を計算 */
+            font-size: 16px;
+            transition: border-color 0.3s; /* ホバー時のアニメーション */
+        }
+
+        input[type="text"]:focus, 
+        input[type="password"]:focus {
+            border-color: #1877f2; /* フォーカス時の色 */
+            outline: none; /* デフォルトの枠線を消す */
+            box-shadow: 0 0 0 1px #1877f2;
+        }
+
+        /* ログインボタンのスタイル */
+        button[type="submit"] {
+            background-color: #1877f2; /* ブランドカラーの青 */
+            color: white;
+            padding: 14px 20px;
+            margin-top: 10px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            width: 100%;
+            font-size: 18px;
+            font-weight: bold;
+            transition: background-color 0.3s;
+        }
+
+        button[type="submit"]:hover {
+            background-color: #166fe5; /* ホバーで少し濃く */
+        }
+    </style>
+</head>
+<body>
+
+    <div class="login-container">
+        <h2>アカウントへログイン</h2>
+        <form action="/login" method="post">
+            <div>
+                <label for="username">ユーザー名またはメールアドレス</label>
+                <input type="text" id="username" name="username" required placeholder="例: user@example.com">
+            </div>
+            <div>
+                <label for="password">パスワード</label>
+                <input type="password" id="password" name="password" required placeholder="パスワードを入力してください">
+            </div>
+            <button type="submit">ログイン</button>
+        </form>
+    </div>
+
+</body>
+</html>
