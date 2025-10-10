@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8" />
+  <title>パスワード再設定</title>
+  <link rel="stylesheet" href="/style.css" />
+</head>
+<body>
+  <h1>パスワード再設定</h1>
+  <form action="/forgot" method="POST">
+    <label>ユーザー名:</label><br>
+    <input type="text" name="username" required><br>
+    <label>新しいパスワード:</label><br>
+    <input type="password" name="newpassword" required><br>
+    <button type="submit">再設定</button>
+  </form>
+  <p><a href="/">ログイン画面へ戻る</a></p>
+</body>
+</html>
