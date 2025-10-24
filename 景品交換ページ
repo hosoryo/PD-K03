@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <title>景品交換</title>
+  <style>
+    body {
+      font-family: "Segoe UI", sans-serif;
+      background-color: #fafafa;
+      text-align: center;
+      padding: 40px;
+    }
+    h1 {
+      color: #333;
+      border-bottom: 2px solid #007bff;
+      display: inline-block;
+      padding-bottom: 10px;
+    }
+    .item {
+      border: 1px solid #ccc;
+      border-radius: 12px;
+      background-color: #fff;
+      width: 250px;
+      margin: 20px auto;
+      padding: 20px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+    }
+    .item button {
+      background-color: #007bff;
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+    .item button:hover {
+      background-color: #0056b3;
+    }
+    a {
+      display: inline-block;
+      margin-top: 30px;
+      color: #007bff;
+      text-decoration: none;
+    }
+    a:hover {
+      text-decoration: underline;
+    }
+  </style>
+</head>
+<body>
+  <h1>🎁 景品交換ページ 🎁</h1>
+  <p>ポイントを使って、以下の景品と交換できます。</p>
+
+  <div class="item">
+    <h3>商品券（100ポイント）</h3>
+    <button onclick="exchange('スターバックスカード', 100)">交換する</button>
+  </div>
+
+  <div class="item">
+    <h3>商品券（200ポイント）</h3>
+    <button onclick="exchange('Amazonギフト券', 200)">交換する</button>
+  </div>
+
+  <div class="item">
+    <h3>お菓子セット（50ポイント）</h3>
+    <button onclick="exchange('お菓子セット', 50)">交換する</button>
+  </div>
+
+  <a href="index.html">← ホームに戻る</a>
+
+  <script>
+    // 景品交換ボタンが押されたときの処理
+    function exchange(itemName, pointCost) {
+      // 確認メッセージ
+      const confirmExchange = confirm(`${itemName}（${pointCost}ポイント）と交換しますか？`);
+      if (confirmExchange) {
+        alert(`✅ ${itemName} と交換しました！`);
+      } else {
+        alert("キャンセルしました。");
+      }
+    }
+  </script>
+</body>
+</html>
