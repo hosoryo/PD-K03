@@ -4,5 +4,5 @@ exclude:
   - package-lock.json
   - package.json
   - README.md
-  - **/node_modules/**
-  - login-app/**
+  - "**/node_modules/**"
+  - "login-app/**"
