@@ -1,0 +1,303 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>マイページ - アンケート＆ポイント</title>
+<style>
+  :root { --bg:#f6f7fb; --card:#ffffff; --accent:#2563eb; --muted:#6b7280; --success:#059669; }
+  body { margin:0; font-family: "Helvetica Neue", Arial, "Hiragino Kaku Gothic ProN", "Meiryo", sans-serif; background:var(--bg); color:#111; }
+  .container { max-width:1000px; margin:28px auto; padding:20px; }
+  header { display:flex; justify-content:space-between; align-items:center; gap:16px; margin-bottom:20px; }
+  h1 { margin:0; font-size:20px; }
+  nav a { color:var(--accent); text-decoration:none; margin-left:12px; font-size:14px; }
+  .grid { display:grid; grid-template-columns: 1fr 320px; gap:20px; align-items:start; }
+  .card { background:var(--card); padding:18px; border-radius:12px; box-shadow:0 6px 18px rgba(17,24,39,0.06); }
+  .profile { display:flex; align-items:center; gap:14px; }
+  .avatar { width:64px; height:64px; border-radius:50%; background:#e6eefc; display:flex; align-items:center; justify-content:center; font-weight:700; color:var(--accent); font-size:24px; }
+  .userinfo { flex:1; }
+  .points { text-align:right; }
+  .points .num { font-size:24px; font-weight:700; color:var(--accent); }
+  h2 { margin:0 0 12px 0; font-size:16px; }
+  .survey-list, .notif-list { display:flex; flex-direction:column; gap:10px; }
+  .survey-item { display:flex; justify-content:space-between; gap:12px; padding:12px; border-radius:8px; background:#fbfdff; border:1px solid #eef2ff; }
+  .muted { color:var(--muted); font-size:13px; }
+  .btn { display:inline-block; padding:8px 12px; border-radius:8px; background:var(--accent); color:#fff; text-decoration:none; font-size:14px; border:none; cursor:pointer; }
+  .btn.secondary { background:#fff; color:var(--accent); border:1px solid #dbeafe; }
+  .small { font-size:13px; padding:6px 10px; border-radius:8px; }
+  .list-plain { list-style:none; padding:0; margin:0; display:flex; gap:8px; flex-wrap:wrap; }
+  footer { text-align:center; margin-top:22px; color:var(--muted); font-size:13px; }
+  /* responsive */
+  @media (max-width:900px) {
+    .grid { grid-template-columns: 1fr; }
+    .points { text-align:left; margin-top:8px; }
+  }
+  /* modal */
+  .modal { position:fixed; inset:0; display:flex; align-items:center; justify-content:center; background:rgba(0,0,0,0.45); padding:20px; visibility:hidden; opacity:0; transition:opacity .18s ease; }
+  .modal.show { visibility:visible; opacity:1; }
+  .modal .box { width:100%; max-width:520px; background:#fff; border-radius:10px; padding:18px; }
+  .modal h3 { margin-top:0; }
+  .form-row { margin:10px 0; }
+  input[type="text"], textarea, select { width:100%; padding:10px; border-radius:8px; border:1px solid #e6e9ee; font-size:14px; resize:vertical; }
+  .flex { display:flex; gap:10px; align-items:center; }
+</style>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <div>
+        <h1>アンケート＆ポイント - マイページ</h1>
+        <div class="muted">ユーザー専用ページ｜ポイント・回答履歴の確認</div>
+      </div>
+      <nav>
+        <a href="index.php">ホーム</a>
+        <a href="survey.php">アンケート一覧</a>
+        <a href="points.php">ポイント履歴</a>
+        <a href="reward.php">景品交換</a>
+        <a href="logout.php" style="color:#ef4444">ログアウト</a>
+      </nav>
+    </header>
+
+    <main class="grid">
+      <!-- Left: main content -->
+      <section class="card">
+        <div class="profile">
+          <div class="avatar" id="avatar">A</div>
+          <div class="userinfo">
+            <div style="display:flex; justify-content:space-between; align-items:center;">
+              <div>
+                <div id="displayName" style="font-weight:700; font-size:16px">テスト ユーザー</div>
+                <div class="muted" id="username">@test</div>
+              </div>
+              <div class="points">
+                <div class="muted">保有ポイント</div>
+                <div class="num" id="points">420 pt</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <hr style="margin:14px 0; border:none; border-top:1px solid #eef2ff;">
+
+        <div style="display:flex; justify-content:space-between; align-items:center; gap:12px; margin-bottom:8px">
+          <h2>アンケート履歴</h2>
+          <div class="muted">最近の回答</div>
+        </div>
+
+        <div class="survey-list" id="surveyList">
+          <!-- JS で埋める -->
+        </div>
+
+        <div style="margin-top:18px; display:flex; gap:10px; align-items:center;">
+          <button class="btn" id="btnTakeSurvey">新しいアンケートを開く</button>
+          <button class="btn secondary" id="btnExchange">ポイントを交換する</button>
+        </div>
+
+        <section style="margin-top:20px">
+          <h2>お知らせ</h2>
+          <ul class="notif-list" id="notifList">
+            <!-- JS で埋める -->
+          </ul>
+        </section>
+      </section>
+
+      <!-- Right: sidebar -->
+      <aside class="card">
+        <h2>アカウント操作</h2>
+        <div style="margin-bottom:12px">
+          <div class="muted">アカウントID</div>
+          <div id="userId" style="font-weight:700">#12345</div>
+        </div>
+
+        <div style="margin-bottom:12px">
+          <div class="muted">最近の獲得</div>
+          <ul class="list-plain" id="recentGains">
+            <!-- JS -->
+          </ul>
+        </div>
+
+        <div style="margin-bottom:12px">
+          <div class="muted">クイックリンク</div>
+          <div style="display:flex; flex-direction:column; gap:8px; margin-top:8px">
+            <a class="small" href="survey.php">アンケート一覧</a>
+            <a class="small" href="points.php">ポイント履歴</a>
+            <a class="small" href="reward.php">景品交換</a>
+            <a class="small" href="opinion.php">意見箱</a>
+          </div>
+        </div>
+
+        <div>
+          <div class="muted">サポート</div>
+          <div style="margin-top:8px"><a class="small" href="mailto:support@example.com">運営に問い合わせ</a></div>
+        </div>
+      </aside>
+    </main>
+
+    <footer>
+      <div class="muted">© 2025 アンケート＆ポイントアプリ</div>
+    </footer>
+  </div>
+
+  <!-- Modal for exchange -->
+  <div id="modal" class="modal" aria-hidden="true">
+    <div class="box">
+      <h3>ポイントで交換</h3>
+      <div id="modalBody">
+        <p class="muted">交換したい景品を選んでください。</p>
+        <div style="margin-top:8px">
+          <select id="rewardSelect">
+            <!-- populated by JS -->
+          </select>
+        </div>
+        <div style="margin-top:12px" id="exchangeMsg"></div>
+      </div>
+      <div style="margin-top:14px; display:flex; justify-content:flex-end; gap:8px;">
+        <button class="btn secondary" id="modalClose">閉じる</button>
+        <button class="btn" id="modalConfirm">交換する</button>
+      </div>
+    </div>
+  </div>
+
+<script>
+/*
+  このページは静的HTMLですが、下の `app` オブジェクト部分を
+  実際の API（例：/api.php?action=whoami や /api.php?action=rewards）へ fetch して
+  動的に差し替えるだけで実運用できます。
+*/
+
+/* ---- ダミーデータ（実運用では API から取得） ---- */
+const app = {
+  user: { id:12345, username:"test", displayName:"テスト ユーザー", points:420 },
+  surveys: [
+    { id:1, title:"サービス満足度アンケート", answeredAt:"2025-10-21", points:20 },
+    { id:2, title:"UIに関するアンケート", answeredAt:"2025-10-15", points:30 }
+  ],
+  notifications: [
+    { id:1, msg:"新しいアンケートが追加されました。", date:"2025-10-20" }
+  ],
+  rewards: [
+    { id:1, title:"図書カード500円分", cost:300, stock:10 },
+    { id:2, title:"オリジナルTシャツ", cost:500, stock:2 }
+  ],
+  recentGains: [
+    { label:"+20pt (アンケート)", at:"2025-10-21" },
+    { label:"+30pt (アンケート)", at:"2025-10-15" }
+  ]
+};
+
+/* ---- UI描画 ---- */
+function render() {
+  document.getElementById('avatar').textContent = (app.user.displayName || 'U').slice(0,1);
+  document.getElementById('displayName').textContent = app.user.displayName;
+  document.getElementById('username').textContent = '@' + app.user.username;
+  document.getElementById('userId').textContent = '#'+app.user.id;
+  document.getElementById('points').textContent = app.user.points + ' pt';
+
+  // surveys
+  const scont = document.getElementById('surveyList');
+  scont.innerHTML = '';
+  if (app.surveys.length === 0) {
+    scont.innerHTML = '<div class="muted">まだ回答したアンケートはありません</div>';
+  } else {
+    app.surveys.forEach(s => {
+      const el = document.createElement('div');
+      el.className = 'survey-item';
+      el.innerHTML = `<div>
+                        <div style="font-weight:600">${escapeHtml(s.title)}</div>
+                        <div class="muted">回答日: ${escapeHtml(s.answeredAt || '未回答')}</div>
+                      </div>
+                      <div style="text-align:right">
+                        <div class="muted">獲得</div>
+                        <div style="font-weight:700;color:var(--success)">+${s.points} pt</div>
+                      </div>`;
+      scont.appendChild(el);
+    });
+  }
+
+  // notifications
+  const ncont = document.getElementById('notifList');
+  ncont.innerHTML = '';
+  app.notifications.forEach(n => {
+    const li = document.createElement('li');
+    li.style.padding = '8px';
+    li.style.borderRadius = '8px';
+    li.style.background = '#fbfdff';
+    li.style.border = '1px solid #eef2ff';
+    li.innerHTML = `<div style="font-weight:600">${escapeHtml(n.msg)}</div><div class="muted">${escapeHtml(n.date)}</div>`;
+    ncont.appendChild(li);
+  });
+
+  // recent gains
+  const gcont = document.getElementById('recentGains');
+  gcont.innerHTML = '';
+  app.recentGains.forEach(g => {
+    const li = document.createElement('li');
+    li.textContent = g.label + ' · ' + g.at;
+    li.style.background = '#f1f5f9';
+    li.style.padding = '6px 8px';
+    li.style.borderRadius = '8px';
+    gcont.appendChild(li);
+  });
+
+  // rewards select
+  const sel = document.getElementById('rewardSelect');
+  sel.innerHTML = '';
+  app.rewards.forEach(r => {
+    const opt = document.createElement('option');
+    opt.value = r.id;
+    opt.textContent = `${r.title} （必要: ${r.cost}pt / 在庫: ${r.stock}）`;
+    sel.appendChild(opt);
+  });
+}
+
+/* ---- モーダル操作 ---- */
+const modal = document.getElementById('modal');
+document.getElementById('btnExchange').addEventListener('click', () => {
+  document.getElementById('exchangeMsg').textContent = '';
+  modal.classList.add('show');
+  modal.setAttribute('aria-hidden','false');
+});
+document.getElementById('modalClose').addEventListener('click', () => {
+  modal.classList.remove('show');
+  modal.setAttribute('aria-hidden','true');
+});
+document.getElementById('modalConfirm').addEventListener('click', () => {
+  const rewardId = parseInt(document.getElementById('rewardSelect').value,10);
+  const reward = app.rewards.find(r=>r.id===rewardId);
+  if (!reward) { document.getElementById('exchangeMsg').textContent = '景品が見つかりません'; return; }
+  if (reward.stock <= 0) { document.getElementById('exchangeMsg').textContent = '在庫がありません'; return; }
+  if (app.user.points < reward.cost) { document.getElementById('exchangeMsg').textContent = 'ポイントが不足しています'; return; }
+
+  // 簡易処理（実運用では API を呼びサーバー側で在庫/ポイント更新してください）
+  app.user.points -= reward.cost;
+  reward.stock -= 1;
+  app.recentGains.unshift({ label:'-'+reward.cost+'pt (景品交換)', at: new Date().toISOString().slice(0,10) });
+  document.getElementById('exchangeMsg').textContent = '交換申請を受け付けました。';
+  render();
+});
+
+/* ---- 新しいアンケートボタン（例: アンケート一覧へ遷移） ---- */
+document.getElementById('btnTakeSurvey').addEventListener('click', () => {
+  location.href = 'survey.php';
+});
+
+/* ---- ユーティリティ ---- */
+function escapeHtml(s) {
+  return (s+'').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+}
+
+/* ---- 実行 ---- */
+render();
+
+/* ---- 実運用にするには（例） ----
+  // 1) ページ読み込み時に API からユーザー情報を取得:
+  fetch('/api.php?action=whoami').then(r=>r.json()).then(js=>{
+    if(js.ok){ app.user = js.user; render(); } else { location.href='login.php'; }
+  });
+
+  // 2) アンケート履歴・お知らせ・景品はそれぞれ API から取得して app.xxx にセットする
+  // 3) 交換ボタン押下は fetch POST でサーバーに依頼し、成功したら再取得 or 更新する
+*/
+</script>
+</body>
+</html>
