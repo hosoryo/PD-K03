@@ -1,0 +1,65 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>送信完了</title>
+  <!--  モバイル用UI色とダークモード -->
+  <meta name="theme-color" content="#2563eb" />
+  <meta name="color-scheme" content="light dark" />
+  
+  <style>
+    body{font-family:system-ui, sans-serif; margin:24px}
+    /* ====== ここからスマホ用設定 ====== */
+    body{font-size:16px; line-height:1.6;}
+    body{
+      margin: clamp(12px, 4vw, 24px);
+      padding-bottom: env(safe-area-inset-bottom, 0px);
+      min-height: 100dvh;   
+      display: grid; place-items: center;
+      text-align: center;
+      gap: 12px;
+      background:
+        radial-gradient(800px 500px at 100% -20%, #e0e7ff33, transparent 60%),
+        radial-gradient(700px 450px at -10% 0%, #a7f3d033, transparent 55%),
+        #f6f7fb;
+    }
+
+    /* ★ 「戻る」ボタンを押しやすく */
+    a{
+      display:inline-block;
+      padding: 12px 16px;
+      border-radius: 12px;
+      background:#2563eb;
+      color:#fff;
+      text-decoration:none;
+      font-weight:700;
+      box-shadow: 0 8px 22px rgba(37,99,235,.25);
+      transition: opacity .15s ease, transform .06s ease;
+      touch-action: manipulation;
+    }
+    a:hover{opacity:.94}
+    a:active{transform: translateY(1px)}
+    a:focus-visible{
+      outline:2px solid transparent;
+      box-shadow: 0 0 0 6px rgba(37,99,235,.35);
+    }
+
+    /* 見出しサイズを端末幅に合わせて可変 */
+    h2{font-size: clamp(20px, 6vw, 28px); margin: 0 0 6px;}
+
+    /* ダークモード */
+    @media (prefers-color-scheme: dark){
+      body{background:#0b1220; color:#e5e7eb}
+      a{background:#60a5fa; color:#0b1220; box-shadow: 0 8px 22px rgba(0,0,0,.45);}
+    }
+    /* ===== スマホ用設定ここまで ===== */
+  </style>
+    
+</head>
+<body>
+  <h2>送信ありがとうございました。</h2>
+  <p><a href="index.html">戻る</a></p>
+</body>
+</html>
+
