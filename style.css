@@ -1,0 +1,113 @@
+/* ==================================== */
+/* 1. 基本設定 (Base Styles) */
+/* ==================================== */
+body {
+    font-family: 'Helvetica Neue', Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-image: url('homebackground.jpg'); 
+    background-size: cover;                        
+    background-position: center;                   
+    background-repeat: no-repeat;                  
+    background-attachment: fixed;                  
+    
+    background-color: #f8f9fa; 
+    color: #ffffff;
+    line-height: 1.6;
+}
+
+
+.content {
+
+    background-color: rgba(255, 255, 255, 0.85); 
+    max-width: 1200px;
+    margin: 20px auto; 
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(252, 252, 252, 0.2);
+    min-height: 60vh;
+}
+
+/* ==================================== */
+/* 2. ヘッダー (App Bar) */
+/* ==================================== */
+.app-bar {
+    background-color: #2c3e50;
+    color: white;
+    padding: 10px 30px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.15); 
+}
+
+.app-bar h1 {
+    font-size: 1.8em;
+    margin: 0;
+}
+
+/* ==================================== */
+/* 3. ナビゲーション (Nav) */
+/* ==================================== */
+.nav ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+}
+
+.nav li {
+    margin-left: 25px; /* メニュー項目の間隔 */
+}
+
+.nav a {
+    color: white;
+    padding: 10px 12px;
+    border-radius: 5px;
+    transition: background-color 0.3s, transform 0.1s; 
+}
+
+.nav a:hover {
+    background-color: #34495e; 
+    text-decoration: none;
+}
+
+.nav a:active {
+    transform: translateY(1px);
+}
+
+/* ==================================== */
+/* 4. メインコンテンツ (Main Content) */
+/* ==================================== */
+.content {
+background-color: transparent; 
+ 
+max-width: 1200px;
+margin: 20px auto; 
+padding: 20px; 
+ 
+
+box-shadow: none; 
+border-radius: 0;
+ 
+min-height: 60vh;
+}
+
+/* ==================================== */
+/* 5. フッター (Footer) */
+/* ==================================== */
+footer {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 1000;
+  background-color: #7f8c8d;
+  color: white;
+  text-align: center;
+  padding: 15px 0;
+}
+
+.content {
+  padding-bottom: 70px; 
+}
