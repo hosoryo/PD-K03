@@ -49,13 +49,6 @@
         <h1>アンケート＆ポイント - マイページ</h1>
         <div class="muted">ユーザー専用ページ｜ポイント・回答履歴の確認</div>
       </div>
-      <nav>
-        <a href="index.php">ホーム</a>
-        <a href="survey.php">アンケート一覧</a>
-        <a href="points.php">ポイント履歴</a>
-        <a href="reward.php">景品交換</a>
-        <a href="logout.php" style="color:#ef4444">ログアウト</a>
-      </nav>
     </header>
 
     <main class="grid">
@@ -119,10 +112,6 @@
         <div style="margin-bottom:12px">
           <div class="muted">クイックリンク</div>
           <div style="display:flex; flex-direction:column; gap:8px; margin-top:8px">
-            <a class="small" href="survey.php">アンケート一覧</a>
-            <a class="small" href="points.php">ポイント履歴</a>
-            <a class="small" href="reward.php">景品交換</a>
-            <a class="small" href="opinion.php">意見箱</a>
           </div>
         </div>
 
@@ -299,5 +288,51 @@ render();
   // 3) 交換ボタン押下は fetch POST でサーバーに依頼し、成功したら再取得 or 更新する
 */
 </script>
+</body>
+</html>
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>マイページ</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<section>
+    <h1>マイページ</h1>
+    <nav>
+        <ul>
+            <li><a href="home.html">ホーム</a></li>
+            <li><a href="survey.html">アンケート</a></li>
+            <li><a href="points.html">ポイント履歴</a></li>
+            <li><a href="koukan.html">景品交換</a></li>
+            <li><a href="opinion.html">意見箱</a></li>
+            <li><a href="mypage.html">マイページ</a></li>
+        </ul>
+    </nav>
+<section>
+
+<main>
+    <h2>ようこそ、○○さん！</h2>
+    <p>ここではあなたのプロフィールやポイント情報を確認できます。</p>
+
+    <section>
+        <h3>プロフィール情報</h3>
+        <ul>
+            <li>ユーザー名：example_user</li>
+            <li>メールアドレス：user@example.com</li>
+            <li>登録日：2025年10月31日</li>
+        </ul>
+    </section>
+</main>
+
+<footer>
+    <p>&copy; 2025 アンケートアプリ</p>
+</footer>
+
+</body>
+</html>
 </body>
 </html>
