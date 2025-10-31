@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>アンケートを作成する</title>
+    <style>
+        /* スタイルは簡略化しています */
+        body { font-family: Arial, sans-serif; margin: 20px; background-color: #f4f4f4; }
+        .container { max-width: 900px; margin: 0 auto; padding: 25px; background-color: #fff; border-radius: 8px; box-shadow: 0 4px 8px rgba(0,0,0,0.1); }
+        h1 { color: #333; text-align: center; margin-bottom: 25px; }
+        .header-links { text-align: right; margin-bottom: 15px; }
+        .header-links .return-to-form-btn { padding: 8px 15px; text-decoration: none; background-color: #6c757d; color: white; border-radius: 4px; }
+        label { display: block; font-weight: bold; margin-bottom: 5px; }
+        input[type="text"], select { width: 100%; padding: 10px; margin-bottom: 15px; border: 1px solid #ccc; border-radius: 4px; box-sizing: border-box; }
+        .question-group { border: 1px solid #007bff; padding: 15px; margin-bottom: 20px; border-radius: 6px; background-color: #eaf3ff; }
+        .question-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; }
+        .delete-btn { background-color: #dc3545; color: white; border: none; padding: 5px 10px; border-radius: 4px; cursor: pointer; font-size: 0.9em; }
+        .add-question-btn { background-color: #28a745; color: white; padding: 12px 20px; border: none; border-radius: 4px; cursor: pointer; margin-top: 10px; font-size: 16px; }
+        .submit-btn { background-color: #007bff; color: white; width: 100%; padding: 12px 20px; border: none; border-radius: 4px; cursor: pointer; margin-top: 25px; font-size: 16px; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header-links">
+            <a href="ank2.html" class="return-to-form-btn">回答ページに戻る</a>
+        </div>
+
+        <h1>アンケートを作成する</h1>
+
+        <form id="createSurveyForm">
+            <div class="form-section">
+                <label for="surveyTitle">アンケートタイトル</label>
+                <input type="text" id="surveyTitle" name="surveyTitle" required>
+            </div>
+
+            <h2>設問リスト</h2>
+            <div id="questionsContainer">
+                </div>
+
+            <button type="button" id="addQuestionBtn" class="add-question-btn">設問を追加</button>
+
+            <button type="submit" class="submit-btn">アンケートを登録する</button>
+        </form>
+    </div>
+
+    <script>
+        const form = document.getElementById('createSurveyForm');
+        const questionsContainer = document.getElementById('questionsContainer');
+        const addQuestionBtn = document.getElementById('addQuestionBtn');
+        let questionCounter = 0;
+
+        function addQuestion() {
+            questionCounter++;
+            const questionId = `q${questionCounter}`;
+
+            const qGroup = document.createElement('div');
+            qGroup.classList.add('question-group');
+            qGroup.setAttribute('data-id', questionId);
+
+            qGroup.innerHTML = `
+                <div class="question-header">
+                    <h3>設問 ${questionCounter}</h3>
+                    <button type="button" class="delete-btn" onclick="deleteQuestion('${questionId}')">削除</button>
+                </div>
+                
+                <label for="${questionId}_text">設問文</label>
+                <input type="text" id="${questionId}_text" name="${questionId}_text" required>
+                
+                <label for="${questionId}_type">回答形式</label>
+                <select id="${questionId}_type" name="${questionId}_type" onchange="toggleOptions('${questionId}', this.value)">
+                    <option value="text">自由記述 (テキスト)</option>
+                    <option value="radio">単一選択 (ラジオボタン)</option>
+                    <option value="checkbox">複数選択 (チェックボックス)</option>
+                </select>
+
+                <div id="${questionId}_options" class="options-container" style="margin-top: 10px; padding: 10px; border: 1px dashed #aaa; display: none;">
+                    <label>選択肢 (カンマ区切りで入力)</label>
+                    <input type="text" id="${questionId}_options_input" name="${questionId}_options_input" placeholder="例: 満足, やや満足, 不満">
+                </div>
+            `;
+            questionsContainer.appendChild(qGroup);
+        }
+
+        function deleteQuestion(id) {
+            const element = document.querySelector(`.question-group[data-id="${id}"]`);
+            if (element) {
+                element.remove();
+            }
+        }
+
+        function toggleOptions(id, type) {
+            const optionsContainer = document.getElementById(`${id}_options`);
+            if (type === 'radio' || type === 'checkbox') {
+                optionsContainer.style.display = 'block';
+                optionsContainer.querySelector('input').required = true;
+            } else {
+                optionsContainer.style.display = 'none';
+                optionsContainer.querySelector('input').required = false;
+            }
+        }
+
+        addQuestion();
+        addQuestionBtn.addEventListener('click', addQuestion);
+
+        form.addEventListener('submit', function(event) {
+            event.preventDefault();
+            
+            // JavaのAPIへ送信するデータ収集ロジック...
+            
+            alert('アンケートが正常に登録されました。（実際はサーバー処理が必要です）');
+            
+            // 登録成功後、フォームをリセットし、最初の設問を再表示
+            form.reset();
+            questionsContainer.innerHTML = '';
+            questionCounter = 0;
+            addQuestion();
+        });
+    </script>
+</body>
+</html>

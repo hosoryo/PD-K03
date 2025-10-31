@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>アンケート回答</title>
+    <style>
+        /* 高齢者でも見やすいように、コントラストを強め、文字サイズを調整 */
+        body { font-family: 'Meiryo', 'Yu Gothic', sans-serif; margin: 25px; background-color: #f0f0f0; font-size: 110%; }
+        .container { max-width: 900px; margin: 0 auto; padding: 30px; background-color: #ffffff; border-radius: 10px; box-shadow: 0 4px 10px rgba(0,0,0,0.15); }
+        h1 { color: #1a1a1a; text-align: center; font-size: 2.2em; margin-bottom: 30px; }
+        
+        .header-links { text-align: right; margin-bottom: 20px; }
+        .header-links a { padding: 10px 18px; text-decoration: none; color: white; border-radius: 6px; margin-left: 15px; font-weight: bold; font-size: 1em; }
+        .header-links .history-btn { background-color: #0056b3; } /* 濃い青 */
+        .header-links .create-btn { background-color: #008000; } /* 濃い緑 */
+
+        .question-group { margin-bottom: 25px; padding: 20px; border: 2px solid #ccc; border-radius: 8px; background-color: #f9f9f9; }
+        label { display: block; font-weight: bold; margin-bottom: 10px; font-size: 1.1em; }
+        input[type="text"] { width: 100%; padding: 12px; border: 1px solid #777; border-radius: 4px; box-sizing: border-box; font-size: 1em; }
+        
+        .submit-btn, .return-btn { display: block; width: 100%; padding: 15px; background-color: #0056b3; color: white; border: none; border-radius: 6px; font-size: 1.2em; cursor: pointer; margin-top: 25px; font-weight: bold; }
+        .return-btn { background-color: #6c757d; }
+        
+        #thankYouMessage { text-align: center; font-size: 2em; color: #008000; margin-top: 50px; display: none; font-weight: bold; }
+    </style>
+</head>
+<body>
+    <div class="container" id="surveyContainer">
+        <div class="header-links">
+            <a href="rire2.html" class="history-btn">履歴</a>
+            <a href="sakusei.html" class="create-btn">作成</a>
+        </div>
+        
+        <h1>アンケート回答</h1>
+
+        <form id="surveyForm">
+            <div class="question-group">
+                <label for="q1">Q1. サービスの満足度をご記入ください (5段階評価)</label>
+                <input type="text" id="q1" name="satisfaction_rating" required>
+            </div>
+            
+            <input type="hidden" name="surveyId" id="surveyId" value="SV_20251024_001">
+            <input type="hidden" name="surveyName" id="surveyName" value="2025年10月度顧客満足度調査">
+
+            <button type="submit" class="submit-btn">回答を送信する</button>
+        </form>
+    </div>
+    
+    <div id="thankYouMessage">
+        回答ありがとうございました。
+        <button class="return-btn" onclick="location.reload()">最初のアンケートページに戻る</button>
+    </div>
+
+    <script>
+        // ローカルストレージを履歴データの模擬として使用
+        if (!localStorage.getItem('surveyHistory')) {
+            localStorage.setItem('surveyHistory', JSON.stringify([]));
+        }
+
+        document.getElementById('surveyForm').addEventListener('submit', function(event) {
+            event.preventDefault();
+
+            const surveyId = document.getElementById('surveyId').value;
+            const surveyName = document.getElementById('surveyName').value;
+
+            // Javaサーバーへの送信を模擬
+            setTimeout(() => {
+                handleSuccessfulSubmission(surveyId, surveyName);
+            }, 500);
+        });
+
+        function handleSuccessfulSubmission(id, name) {
+            // 履歴ページにデータを追加する処理 (JavaScriptで模擬)
+            const history = JSON.parse(localStorage.getItem('surveyHistory'));
+            
+            const newEntry = { id: id, name: name, date: new Date().toLocaleDateString() };
+            history.push(newEntry);
+            localStorage.setItem('surveyHistory', JSON.stringify(history));
+            
+            // メッセージ表示とフォーム非表示
+            document.getElementById('surveyContainer').style.display = 'none';
+            document.getElementById('thankYouMessage').style.display = 'block'; 
+        }
+    </script>
+</body>
+</html>

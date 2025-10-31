@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>アンケート回答履歴</title>
+    <style>
+        /* 高齢者でも見やすいように、コントラストを強め、文字サイズを大きく */
+        body { font-family: 'Meiryo', 'Yu Gothic', sans-serif; margin: 25px; background-color: #ffffff; font-size: 110%; color: #000000; }
+        h1 { color: #1a1a1a; text-align: center; font-size: 2.5em; margin-bottom: 30px; }
+        
+        .history-list { list-style: none; padding: 0; max-width: 900px; margin: 20px auto; }
+        
+        /* 各履歴項目のスタイル */
+        .history-item { 
+            display: flex; justify-content: space-between; align-items: center; 
+            padding: 20px 25px; 
+            margin-bottom: 12px; 
+            background-color: #f8f8f8; 
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            cursor: pointer;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1); 
+        }
+        .history-item:hover { background-color: #e8e8e8; }
+
+        /* 連番表示のスタイル */
+        .survey-number { 
+            font-weight: bold; 
+            color: #333; 
+            width: 8%; /* 幅を連番に合わせて狭くする */
+            font-size: 1.1em; 
+            flex-shrink: 0; 
+            text-align: center; 
+        }
+        .survey-name { 
+            flex-grow: 1; 
+            color: #000000; 
+            font-size: 1.1em;
+            white-space: nowrap;      
+            overflow: hidden;         
+            text-overflow: ellipsis;  
+            min-width: 0; 
+            padding: 0 15px; 
+        }
+        .survey-date { 
+            font-weight: bold; 
+            color: #333; 
+            width: 15%; 
+            font-size: 1.1em; 
+            flex-shrink: 0; 
+        }
+        
+        /* 戻るボタンのスタイル */
+        .return-link { text-align: left; max-width: 900px; margin: 0 auto 20px; }
+        .return-link a { padding: 12px 20px; background-color: #6c757d; color: white; text-decoration: none; border-radius: 6px; font-weight: bold; font-size: 1.1em; display: inline-block; }
+        
+        /* 削除ボタンのスタイル */
+        .delete-btn {
+            background-color: #dc3545; 
+            color: white;
+            border: none;
+            padding: 10px 18px;
+            border-radius: 6px;
+            cursor: pointer;
+            margin-left: 20px;
+            font-weight: bold;
+            font-size: 1em;
+            flex-shrink: 0;
+        }
+
+        /* === 詳細パネルのスタイル (ポップアップ代替) === */
+        #detailPanel {
+            max-width: 900px;
+            margin: 30px auto;
+            padding: 30px;
+            background-color: #f0f0f0;
+            border: 3px solid #0056b3; /* 濃い青枠 */
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+            font-size: 1.1em;
+        }
+
+        #detailPanel h2 {
+            color: #0056b3;
+            font-size: 1.8em;
+            margin-bottom: 20px;
+            border-bottom: 2px solid #ccc;
+            padding-bottom: 10px;
+        }
+
+        #detailContent h3 {
+            font-size: 1.3em;
+            color: #1a1a1a;
+            margin-top: 20px;
+            margin-bottom: 15px;
+        }
+
+        .question-text {
+            font-weight: bold;
+            color: #333;
+            display: block;
+            margin-bottom: 5px;
+            line-height: 1.5;
+        }
+
+        .answer-content {
+            background-color: #ffffff;
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-left: 5px solid #008000; /* 緑の線で強調 */
+            border-radius: 4px;
+            margin-bottom: 20px;
+            display: block;
+            font-size: 1.1em;
+            line-height: 1.6;
+        }
+
+        #closeDetailBtn {
+            background-color: #6c757d;
+            color: white;
+            border: none;
+            padding: 15px 25px;
+            border-radius: 6px;
+            font-size: 1.2em;
+            cursor: pointer;
+            margin-top: 25px;
+            display: block;
+            width: 100%;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <h1>アンケート回答履歴</h1>
+
+    <div class="return-link">
+        <a href="ank2.html">アンケートページに戻る</a>
+    </div>
+
+    <ul class="history-list" id="surveyHistoryList">
+        </ul>
+
+    <div id="detailPanel" style="display: none;">
+        <h2>選択された回答の詳細</h2>
+        <div id="detailContent">
+            </div>
+        <button id="closeDetailBtn">詳細パネルを閉じる</button>
+    </div>
+    <script>
+        // --- 削除機能 ---
+        function deleteHistory(index) {
+            if (confirm("この回答履歴を本当に削除しますか？")) {
+                const history = JSON.parse(localStorage.getItem('surveyHistory'));
+                history.splice(index, 1);
+                localStorage.setItem('surveyHistory', JSON.stringify(history));
+                location.reload(); 
+            }
+        }
+        // -----------------
+
+        // --- 詳細表示機能 (ポップアップの代替) ---
+        function showDetails(item) {
+            const detailPanel = document.getElementById('detailPanel');
+            const detailContent = document.getElementById('detailContent');
+            
+            let html = `
+                <h3>基本情報</h3>
+                <p><strong>アンケート名:</strong> ${item.name}</p>
+                <p><strong>アンケートID:</strong> ${item.id}</p>
+                <p><strong>回答日:</strong> ${item.date}</p>
+                <hr style="margin: 20px 0; border-top: 1px solid #ccc;">
+                <h3>回答内容（質問文と回答）</h3>
+            `;
+
+            if (item.answers && item.answers.length > 0) {
+                item.answers.forEach((qa, index) => {
+                    html += `
+                        <div style="margin-bottom: 20px;">
+                            <span class="question-text">${qa.question}</span>
+                            <span class="answer-content">${qa.answer}</span>
+                        </div>
+                    `;
+                });
+            } else {
+                html += '<p>詳細な回答内容は保存されていません。（回答ページで保存処理が必要です）</p>';
+            }
+
+            detailContent.innerHTML = html;
+            detailPanel.style.display = 'block';
+
+            // スクロールして詳細パネルの先頭に移動
+            detailPanel.scrollIntoView({ behavior: 'smooth' });
+        }
+
+        document.getElementById('closeDetailBtn').onclick = () => {
+            document.getElementById('detailPanel').style.display = 'none';
+        };
+        // ---------------------------------------------
+
+
+        const listElement = document.getElementById('surveyHistoryList');
+        const historyData = JSON.parse(localStorage.getItem('surveyHistory') || '[]');
+
+        if (historyData.length === 0) {
+            listElement.innerHTML = '<li class="history-item" style="justify-content: center; color: #555;">回答履歴はありません。</li>';
+        } else {
+            historyData.forEach((item, index) => { 
+                const listItem = document.createElement('li');
+                listItem.classList.add('history-item');
+                
+                // ポップアップの代わりに詳細パネルを表示
+                listItem.onclick = () => {
+                    showDetails(item); 
+                };
+
+                // === 連番の生成と表示 ===
+                const sequenceNumber = (index + 1).toString().padStart(3, '0'); // 001, 002...を生成
+                const numberSpan = document.createElement('span');
+                numberSpan.classList.add('survey-number');
+                numberSpan.textContent = sequenceNumber;
+                // ========================
+                
+                const nameSpan = document.createElement('span');
+                nameSpan.classList.add('survey-name');
+                nameSpan.textContent = item.name;
+
+                const dateSpan = document.createElement('span');
+                dateSpan.classList.add('survey-date');
+                dateSpan.textContent = item.date;
+
+                const deleteButton = document.createElement('button');
+                deleteButton.classList.add('delete-btn');
+                deleteButton.textContent = '削除';
+                deleteButton.onclick = (e) => {
+                    e.stopPropagation(); // liのクリックイベントを無効化
+                    deleteHistory(index); 
+                };
+
+                listItem.appendChild(numberSpan); 
+                listItem.appendChild(nameSpan);
+                listItem.appendChild(dateSpan);
+                listItem.appendChild(deleteButton); 
+                
+                listElement.appendChild(listItem);
+            });
+        }
+    </script>
+</body>
+</html>
