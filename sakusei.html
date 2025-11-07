@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>アンケートを作成する</title>
     <style>
-        /* スタイルは簡略化しています */
         body { font-family: Arial, sans-serif; margin: 20px; background-color: #f4f4f4; }
         .container { max-width: 900px; margin: 0 auto; padding: 25px; background-color: #fff; border-radius: 8px; box-shadow: 0 4px 8px rgba(0,0,0,0.1); }
         h1 { color: #333; text-align: center; margin-bottom: 25px; }
@@ -18,12 +17,17 @@
         .delete-btn { background-color: #dc3545; color: white; border: none; padding: 5px 10px; border-radius: 4px; cursor: pointer; font-size: 0.9em; }
         .add-question-btn { background-color: #28a745; color: white; padding: 12px 20px; border: none; border-radius: 4px; cursor: pointer; margin-top: 10px; font-size: 16px; }
         .submit-btn { background-color: #007bff; color: white; width: 100%; padding: 12px 20px; border: none; border-radius: 4px; cursor: pointer; margin-top: 25px; font-size: 16px; }
+        
+        /* 新しいポイント設定セクションのスタイル */
+        .point-setting { margin-bottom: 25px; padding: 15px; border: 1px solid #ffc107; border-radius: 6px; background-color: #fff8e1; }
+        .point-setting label { display: inline-block; margin-right: 20px; font-weight: normal; }
     </style>
 </head>
 <body>
     <div class="container">
         <div class="header-links">
-            <a href="ank2.html" class="return-to-form-btn">回答ページに戻る</a>
+            <a href="Index.html" class="return-to-form-btn">ホーム画面に戻る</a>
+            <a href="ank2.html" class="return-to-form-btn">アンケートページに戻る</a>
         </div>
 
         <h1>アンケートを作成する</h1>
@@ -34,6 +38,13 @@
                 <input type="text" id="surveyTitle" name="surveyTitle" required>
             </div>
 
+            <div class="point-setting">
+                <label style="display: block; font-weight: bold; margin-bottom: 10px;">回答完了時のポイント付与</label>
+                <label><input type="radio" name="awardPoints" value="1" checked> 1ポイント</label> 
+                <label><input type="radio" name="awardPoints" value="3"> 3ポイント</label>
+                <label><input type="radio" name="awardPoints" value="5"> 5ポイント</label>
+                <label><input type="radio" name="awardPoints" value="0"> ポイントなし</label>
+            </div>
             <h2>設問リスト</h2>
             <div id="questionsContainer">
                 </div>
@@ -86,17 +97,19 @@
             const element = document.querySelector(`.question-group[data-id="${id}"]`);
             if (element) {
                 element.remove();
+                // 設問番号をリセットしたい場合はここで再採番処理が必要だが、今回は省略
             }
         }
 
         function toggleOptions(id, type) {
             const optionsContainer = document.getElementById(`${id}_options`);
+            const optionsInput = optionsContainer.querySelector('input');
             if (type === 'radio' || type === 'checkbox') {
                 optionsContainer.style.display = 'block';
-                optionsContainer.querySelector('input').required = true;
+                optionsInput.required = true;
             } else {
                 optionsContainer.style.display = 'none';
-                optionsContainer.querySelector('input').required = false;
+                optionsInput.required = false;
             }
         }
 
@@ -106,9 +119,12 @@
         form.addEventListener('submit', function(event) {
             event.preventDefault();
             
-            // JavaのAPIへ送信するデータ収集ロジック...
+            // 設定されたポイントの値を取得
+            const selectedPoint = document.querySelector('input[name="awardPoints"]:checked').value;
             
-            alert('アンケートが正常に登録されました。（実際はサーバー処理が必要です）');
+            // JavaのAPIへ送信するデータ収集ロジック...（ここでselectedPointもサーバーに送る想定）
+            
+            alert(`アンケート「${document.getElementById('surveyTitle').value}」が正常に登録されました。（獲得ポイント: ${selectedPoint}ポイント）`);
             
             // 登録成功後、フォームをリセットし、最初の設問を再表示
             form.reset();

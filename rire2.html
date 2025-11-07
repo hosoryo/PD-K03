@@ -49,6 +49,17 @@
             width: 15%; 
             font-size: 1.1em; 
             flex-shrink: 0; 
+            text-align: right; /* 日付を右寄せ */
+        }
+        /* ポイント表示のスタイルを新設 */
+        .survey-point {
+            font-weight: bold;
+            color: #ff8c00; /* オレンジ系でポイントを強調 */
+            width: 15%; 
+            font-size: 1.1em; 
+            flex-shrink: 0;
+            text-align: right;
+            padding-right: 15px;
         }
         
         /* 戻るボタンのスタイル */
@@ -135,7 +146,7 @@
     <h1>アンケート回答履歴</h1>
 
     <div class="return-link">
-        <a href="ank2.html">アンケートページに戻る</a>
+        <a href="Index.html">ホーム画面に戻る</a>
     </div>
 
     <ul class="history-list" id="surveyHistoryList">
@@ -164,12 +175,15 @@
             const detailPanel = document.getElementById('detailPanel');
             const detailContent = document.getElementById('detailContent');
             
+            // pointの有無をチェックし、表示する
+            const pointHtml = item.point ? `<p><strong>獲得ポイント:</strong> <span style="color: #ff8c00; font-size: 1.2em;">${item.point}</span> ポイント</p>` : '';
+
             let html = `
                 <h3>基本情報</h3>
                 <p><strong>アンケート名:</strong> ${item.name}</p>
                 <p><strong>アンケートID:</strong> ${item.id}</p>
                 <p><strong>回答日:</strong> ${item.date}</p>
-                <hr style="margin: 20px 0; border-top: 1px solid #ccc;">
+                ${pointHtml} <hr style="margin: 20px 0; border-top: 1px solid #ccc;">
                 <h3>回答内容（質問文と回答）</h3>
             `;
 
@@ -202,8 +216,25 @@
         const listElement = document.getElementById('surveyHistoryList');
         const historyData = JSON.parse(localStorage.getItem('surveyHistory') || '[]');
 
+        // ヘッダーを追加（列名の表示）
+        const headerItem = document.createElement('li');
+        headerItem.classList.add('history-item');
+        headerItem.style.backgroundColor = '#e0e0e0';
+        headerItem.style.fontWeight = 'bold';
+        headerItem.style.cursor = 'default';
+        headerItem.style.boxShadow = 'none';
+        headerItem.innerHTML = `
+            <span class="survey-number">No.</span>
+            <span class="survey-name" style="padding-left: 15px;">アンケート名</span>
+            <span class="survey-point" style="padding-right: 15px;">獲得Pt</span>
+            <span class="survey-date">回答日</span>
+            <span style="width: 15%; flex-shrink: 0; text-align: center;">操作</span>
+        `;
+        listElement.appendChild(headerItem);
+        
+
         if (historyData.length === 0) {
-            listElement.innerHTML = '<li class="history-item" style="justify-content: center; color: #555;">回答履歴はありません。</li>';
+            listElement.innerHTML += '<li class="history-item" style="justify-content: center; color: #555;">回答履歴はありません。</li>';
         } else {
             historyData.forEach((item, index) => { 
                 const listItem = document.createElement('li');
@@ -225,6 +256,12 @@
                 nameSpan.classList.add('survey-name');
                 nameSpan.textContent = item.name;
 
+                // === ポイント表示の追加 ===
+                const pointSpan = document.createElement('span');
+                pointSpan.classList.add('survey-point');
+                pointSpan.textContent = (item.point || 0) + ' Pt'; // pointがない場合は0Pt
+                // ========================
+
                 const dateSpan = document.createElement('span');
                 dateSpan.classList.add('survey-date');
                 dateSpan.textContent = item.date;
@@ -239,6 +276,7 @@
 
                 listItem.appendChild(numberSpan); 
                 listItem.appendChild(nameSpan);
+                listItem.appendChild(pointSpan); // ポイントを表示
                 listItem.appendChild(dateSpan);
                 listItem.appendChild(deleteButton); 
                 
